@@ -2,6 +2,7 @@
 a.out
 *~
 *.py[co]
+*.swp
 
 
 exercises/ex05/data
