@@ -33,6 +33,12 @@ int eval_card(char* card_name) {
   return val;
 }
 
+void update_count(int* count, int val) {
+  if (val == 0) return;
+  if ((val > 2) && (val < 7)) (*count)++;
+  else if (val == 10) (*count)--;
+}
+
 
 
 int main()
@@ -43,12 +49,7 @@ int main()
     char card_name[3];
     user_input(card_name);
     int val = eval_card(card_name);
-    if (val == 0) continue;
-    if ((val > 2) && (val < 7)) {
-      count++;
-    } else if (val == 10) {
-      count--;
-    }
+    update_count(&count, val);
     printf("Current count: %i\n", count);
   }
   return 0;
