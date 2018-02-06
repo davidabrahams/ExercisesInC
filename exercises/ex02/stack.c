@@ -12,14 +12,15 @@ License: GNU GPLv3
 
 int *foo() {
     int i;
-    int array[SIZE];
+    int array[SIZE]; // this array lives in the stack
 
     //printf("%p\n", array);
 
     for (i=0; i<SIZE; i++) {
         array[i] = 42;
     }
-    return array;
+    return array; // this array *dies* once the function exits. No idea
+                  // happens to that chunk of memory.
 }
 
 void bar() {
@@ -36,7 +37,8 @@ void bar() {
 int main()
 {
     int i;
-    int *array = foo();
+    int *array = foo(); // array is a pointer to a variable allocated on foo's
+                        // stack
     bar();
 
     for (i=0; i<SIZE; i++) {
