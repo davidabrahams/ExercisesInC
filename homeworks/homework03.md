@@ -6,7 +6,7 @@ Modify the link below so it points to the `ex03` directory in your
 student repository.
 
 [Here is a link to the ex02.5 directory in my repository](https://github.com/davidabrahams/ExercisesInC/tree/master/exercises/ex02.5)
-[Here is a link to the ex03 directory in my repository](https://github.com/YOUR_GITHUB_USERNAME_HERE/ExercisesInC/tree/master/exercises/ex03)
+[Here is a link to the ex03 directory in my repository](https://github.com/davidabrahams/ExercisesInC/tree/master/exercises/ex03)
 
 ### Think OS Chapter 3 reading questions
 
@@ -69,3 +69,4 @@ If you would like to learn more about file systems, a good next step is to learn
 Start with [this Wikipedia article](https://en.wikipedia.org/wiki/Journaling_file_system), then 
 [Anatomy of Linux Journaling File Systems](http://www.ibm.com/developerworks/library/l-journaling-filesystems/index.html).  
 Also consider reading [this USENIX paper](https://www.usenix.org/legacy/event/usenix05/tech/general/full_papers/prabhakaran/prabhakaran.pdf).
+=======
