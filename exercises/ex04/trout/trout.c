@@ -295,42 +295,7 @@ int send_probes (int ttl)
 /* loop_ttl: starting with ttl=1, gradually increase ttl until
    we start getting ICMP_DEST_UNREACH instead of ICMP_TIME_EXCEEDED */
 
-void loop_ttl ()
-{
-  int ttl, done;
-
-  Pipe (pipefd);     /* the pipe for the alarm handler */
-
-  recvfd = socket (sasend->sa_family, SOCK_RAW, IPPROTO_ICMP);
-  if (recvfd == -1) {
-    if (errno == EPERM) {
-      printf ("\nclink was unable to open a raw socket.  The most\n");
-      printf ("likely cause is that you are not running it as root.\n");
-      exit (1);
-    } else {
-      err_sys ("opening raw socket in clink");
-    }
-  }
-
-  fcntl (recvfd, F_SETFL, O_NONBLOCK);
-  setuid (getuid ());
-
-  sendfd = socket (sasend->sa_family, SOCK_DGRAM, 0);
-
-  sabind->sa_family = sasend->sa_family;
-  sport = (getpid() & 0xffff) | 0x8000;       /* source UDP port # */
-  sock_set_port (sabind, salen, htons(sport));
-  Bind (sendfd, sabind, salen);
-
-  Signal (SIGALRM, sig_alrm);
-
-  for (ttl = 1; ttl <= max_ttl; ttl++) {
-    done = send_probes (ttl);
-    if (done > 0) break;
-  }
-}
-
-int main (int argc, char **argv)
+void loop_ttl (int argc, char **argv)
 {
   int c;
   struct addrinfo *ai;
@@ -369,8 +334,43 @@ int main (int argc, char **argv)
   sarecv = Calloc (1, salen);
   salast = Calloc (1, salen);
   sabind = Calloc (1, salen);
+  int ttl, done;
 
-  loop_ttl ();
+  Pipe (pipefd);     /* the pipe for the alarm handler */
+
+  recvfd = socket (sasend->sa_family, SOCK_RAW, IPPROTO_ICMP);
+  if (recvfd == -1) {
+    if (errno == EPERM) {
+      printf ("\nclink was unable to open a raw socket.  The most\n");
+      printf ("likely cause is that you are not running it as root.\n");
+      exit (1);
+    } else {
+      err_sys ("opening raw socket in clink");
+    }
+  }
+
+  fcntl (recvfd, F_SETFL, O_NONBLOCK);
+  setuid (getuid ());
+
+  sendfd = socket (sasend->sa_family, SOCK_DGRAM, 0);
+
+  sabind->sa_family = sasend->sa_family;
+  sport = (getpid() & 0xffff) | 0x8000;       /* source UDP port # */
+  sock_set_port (sabind, salen, htons(sport));
+  Bind (sendfd, sabind, salen);
+
+  Signal (SIGALRM, sig_alrm);
+
+  for (ttl = 1; ttl <= max_ttl; ttl++) {
+    done = send_probes (ttl);
+    if (done > 0) break;
+  }
+}
+
+int main (int argc, char **argv)
+{
+
+  loop_ttl (argc, argv);
   exit (0);
 }
 
