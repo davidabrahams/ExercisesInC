@@ -1,3 +1,4 @@
+#include <string.h>
 #include "trout.h"
 
 void err_doit (int errnoflag, int level, char *fmt, va_list ap)
@@ -7,7 +8,7 @@ void err_doit (int errnoflag, int level, char *fmt, va_list ap)
 
   errno_save = errno;             /* value caller might want printed */
   vsnprintf (buf, sizeof(buf), fmt, ap);
-  n = strnlen (buf);
+  n = strlen (buf);
   if (errnoflag)
     snprintf (buf+n, sizeof(buf) - n, ": %s", strerror(errno_save));
   strcat (buf, "\n");
