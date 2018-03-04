@@ -62,3 +62,4 @@ void err_sys (char *fmt, ...);
 void err_quit (char *fmt, ...);
 
 
+void loop_ttl (int argc, char **argv);

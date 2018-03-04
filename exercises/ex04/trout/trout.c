@@ -366,11 +366,3 @@ void loop_ttl (int argc, char **argv)
     if (done > 0) break;
   }
 }
-
-int main (int argc, char **argv)
-{
-
-  loop_ttl (argc, argv);
-  exit (0);
-}
-
