@@ -1,4 +1,5 @@
 #include "trout.h"
+#include "util.h"
 
 /* variables we might want to configure */
 int max_ttl = 30;
@@ -202,7 +203,6 @@ double time_to_double (Timeval *time)
 void print_report ()
 {
   int stat;
-  double rtt, krtt;
   char str[NI_MAXHOST];
       
   stat = sock_cmp_addr (sarecv, salast, salen);
@@ -223,7 +223,7 @@ void print_report ()
   /* calculate and print the round trip time using user-level timestamps */
 
   sub_tv (recvtv, sendtv, difftv);
-  rtt = time_to_double (difftv);
+  time_to_double (difftv);
 
   printf ("  %.3f", time_to_double (difftv));
 }
