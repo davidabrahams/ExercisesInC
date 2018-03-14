@@ -42,6 +42,13 @@ returns: new Line; use free_line to free
 */
 // TODO: Write this function
 
+Line *make_line(Point *p1, Point *p2) {
+  Line *l = malloc(sizeof(Line));
+  l->start = p1;
+  l->end = p2;
+  return l;
+}
+
 /* Return string representation
 
 line: Line
@@ -60,6 +67,8 @@ line: Line
 */
 void free_line(Line *line) {
     // Optional TODO: free embedded Points?
+    free(line->start);
+    free(line->end);
     free(line);
 }
 

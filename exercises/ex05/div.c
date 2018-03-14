@@ -22,15 +22,26 @@ uint32_t get_exponent(float x) {
     return expon;
 }
 
+float make_float(uint32_t mant, uint8_t sign, uint16_t exponent) {
+  b.i = mant;
+  b.i = b.i | (sign << 31);
+  b.i = b.i | (exponent << 23);
+  return b.f;
+}
+
 /* Divide a float by a power of two.
 */
 float div_by_pow_2(float x, int n)
 {
-    // TODO: fill this in
-    return x;
+  b.f = x;
+  uint32_t mant_mask = 0x7fffff;
+  uint32_t mant = b.i & mant_mask;
+  uint8_t sign = b.i >> 31;
+  uint32_t exp = get_exponent(x) - 1;
+  return make_float(mant, sign, exp);
 }
 
-void main() {
-    float y = div_by_pow_2(4.82, 1);
+int main() {
+    float y = div_by_pow_2(-4.82, 1);
     printf("%f\n", y);
 }
