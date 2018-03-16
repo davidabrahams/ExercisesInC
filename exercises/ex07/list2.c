@@ -53,8 +53,13 @@ value_p: location to store the popped value
  * returns: head of modified list
  */
 Node *pop(Node *list, int *value_p) {
-  // FILL THIS IN
-  return list;
+  // dereference value_p and store list->val in it
+  *value_p = list->val;
+  // get a pointer to the next value in the list
+  Node *r = list->next;
+  // don't need our reference to the head node anymore
+  free(list);
+  return r;
 }
 
 /* Adds a new element to the beginning of the list.
@@ -110,6 +115,7 @@ int main() {
 
   int value;
   list = pop(list, &value);
+  printf("Removed value: %d\n", value);
   print_list(list);
 
   list = reverse(list);
