@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
+
 int main() {
   char book[] = "book.txt";
   gchar *contents;
@@ -25,7 +26,17 @@ int main() {
       g_hash_table_insert(wordToCount, word, GINT_TO_POINTER(incr));
       i++;
     }
+    // definitely inefficient, but, find the max key, remove it and print, then
+    // repeat
+    //
+    guint length = g_hash_table_size(wordToCount);
+    gchar** keys;
+    while (length > 0) {
+      keys = (const gchar **) g_hash_table_get_keys_as_array(wordToCount, &length);
+
+    }
     g_free(contents);
+    g_free(keys);
   }
   return 0;
 }
