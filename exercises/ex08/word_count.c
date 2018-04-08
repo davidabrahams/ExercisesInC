@@ -28,12 +28,26 @@ int main() {
     }
     // definitely inefficient, but, find the max key, remove it and print, then
     // repeat
-    //
     guint length = g_hash_table_size(wordToCount);
     gchar** keys;
     while (length > 0) {
-      keys = (const gchar **) g_hash_table_get_keys_as_array(wordToCount, &length);
-
+      printf("Length: %d\n", length);
+      keys = g_hash_table_get_keys_as_array(wordToCount, &length);
+      gchar *bestKey = NULL;
+      gint bestValue = 0;
+      for(guint i = 0; i < length; i++) {
+        gchar *k = keys[i];
+        if (!k) continue;
+        gint v = GPOINTER_TO_INT(g_hash_table_lookup(wordToCount, k));
+        if (v > bestValue) {
+          bestKey = k;
+          bestValue = v;
+        }
+      }
+      if (bestKey) {
+        g_hash_table_remove(wordToCount, bestKey);
+        printf("Word: %s, count: %d\n", bestKey, bestValue);
+      }
     }
     g_free(contents);
     g_free(keys);
