@@ -6,6 +6,7 @@ License: MIT License https://opensource.org/licenses/MIT
 */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -18,6 +19,8 @@ License: MIT License https://opensource.org/licenses/MIT
 // errno is an external global variable that contains
 // error information
 extern int errno;
+
+int globalInt = 0;
 
 
 // get_seconds returns the number of seconds since the
@@ -34,6 +37,7 @@ void child_code(int i)
 {
   sleep(i);
   printf("Hello from child %d.\n", i);
+  printf("Value of global int in child: %d\n", globalInt);
 }
 
 // main takes two parameters: argc is the number of command-line
@@ -45,6 +49,9 @@ int main(int argc, char *argv[])
   pid_t pid;
   double start, stop;
   int i, num_children;
+  int stackInt = 0;
+  int *heapInt = malloc(sizeof(int));
+  *heapInt = 0;
 
   // the first command-line argument is the name of the executable.
   // if there is a second, it is the number of children to create.
@@ -61,7 +68,16 @@ int main(int argc, char *argv[])
 
     // create a child process
     printf("Creating child %d.\n", i);
+    globalInt = 0; // reset the ints when we create each child process
+    stackInt = 0;
+    *heapInt = 0;
     pid = fork();
+
+    if (pid > 0) { // if we're in the parent, increase the ints
+      globalInt += i;
+      stackInt += i;
+      *heapInt += i;
+    }
 
     /* check for an error */
     if (pid == -1) {
@@ -71,14 +87,30 @@ int main(int argc, char *argv[])
     }
 
     /* see if we're the parent or the child */
+    // Children share the same global address space
     if (pid == 0) {
       child_code(i);
+      printf("Value of stackInt in child: %d.\n", stackInt);
+      printf("Value of heapInt in child: %d.\n", *heapInt);
       exit(i);
     }
   }
 
   /* parent continues */
   printf("Hello from the parent.\n");
+  printf("Value of globalInt in parent: %d.\n", globalInt);
+  printf("Value of stackInt in parent: %d.\n", stackInt);
+  printf("Value of heapInt in parent: %d.\n", *heapInt);
+  
+  // value of globalInt in parent will be 2, in all children is 0. They do not
+  // share same global space.
+  // same for stackInt/heapInt. They do not share the same stack/heap space.
+  // AFAIK, static/global space is the same, so they don't share the same stack
+  // space.
+  // 
+  // I believe fork duplicates all memory (code also). I couldn't think of a
+  // good way to test this? You could print the address of functions, but that's
+  // in each program's virtual memory space, which is completely copied, right?
 
   for (i=0; i<num_children; i++) {
     pid = wait(&status);
